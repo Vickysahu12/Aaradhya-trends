@@ -1,0 +1,485 @@
+@import "tailwindcss";
+@import "@fontsource-variable/josefin-sans";
+@import "@fontsource-variable/figtree";
+
+/* Devices with a real pointer. Touch screens get explicit controls instead of hover. */
+@custom-variant hover-device (@media (hover: hover) and (pointer: fine));
+
+/*
+  Design tokens. Every colour, font, radius, shadow and easing on the site comes from here.
+
+  Aaradhya Trends is "Slate & Clay": a cool fog page with white cards, slate blue from the
+  logo for type, buttons and the footer, and clay for the warm notes (sale, badges, hover
+  fills). Josefin Sans in wide capitals echoes the logo's deco lettering; Figtree carries
+  everything you read. Shape: buttons and fields 10px, photos and cards 14px, chips pill.
+
+  The aliases at the end keep shared logic components working; new code uses the names.
+*/
+@theme {
+  --color-fog: #f2f3f5;
+  --color-fog-deep: #e4e7ec;
+  --color-paper: #fbfbfc;
+  --color-slate: #3a4a68;
+  --color-slate-deep: #26324a;
+  --color-slate-soft: #6f7d98;
+  --color-ink: #1c2233;
+  --color-ink-soft: #5a6274;
+  --color-clay: #c47c5d;
+  --color-clay-deep: #a65b3c;
+  --color-clay-soft: #f4e4dc;
+  --color-line: rgb(28 34 51 / 0.1);
+  --color-line-strong: rgb(28 34 51 / 0.2);
+  --color-success: #2e7458;
+  --color-danger: #b8322a;
+
+  --color-stone: var(--color-fog);
+  --color-stone-deep: var(--color-fog-deep);
+  --color-ink-hover: var(--color-slate-deep);
+  --color-bronze: var(--color-slate);
+  --color-bronze-bright: var(--color-clay);
+  --color-bronze-soft: var(--color-clay-soft);
+
+  --font-display: "Josefin Sans Variable", "Josefin Sans", ui-sans-serif, sans-serif;
+  --font-sans: "Figtree Variable", "Figtree", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 14px;
+  --radius-field: 10px;
+
+  --shadow-float: 0 12px 30px -16px rgb(38 50 74 / 0.32);
+  --shadow-lift: 0 28px 60px -28px rgb(38 50 74 / 0.42);
+  --shadow-card: 0 20px 40px -24px rgb(28 34 51 / 0.45);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--color-fog-deep) var(--color-fog);
+  }
+
+  body {
+    @apply bg-fog font-sans text-ink antialiased;
+    font-size: 15px;
+    -webkit-tap-highlight-color: transparent;
+    caret-color: var(--color-clay-deep);
+  }
+
+  ::selection {
+    background: var(--color-slate);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-clay-deep);
+    outline-offset: 3px;
+  }
+
+  button,
+  [role="button"],
+  a,
+  label[for],
+  select {
+    cursor: pointer;
+  }
+
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  img {
+    -webkit-user-drag: none;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  a {
+    text-underline-offset: 4px;
+  }
+
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-fog);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-fog-deep);
+    border: 3px solid var(--color-fog);
+    border-radius: 99px;
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1360px] px-4 sm:px-6 lg:px-10;
+  }
+
+  /* Deco capitals, like the logo's wordmark. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.05;
+  }
+
+  /* Small wide labels: kickers, tags, tabs. */
+  .caps {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .field {
+    @apply h-12 w-full border border-line-strong bg-white px-4 text-[15px] text-ink outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-ink-soft;
+    border-radius: var(--radius-field);
+  }
+  .field:focus {
+    border-color: var(--color-slate);
+    box-shadow: 0 0 0 4px rgb(58 74 104 / 0.12);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+
+  /*
+    Button: on hover a second colour sweeps in from the left and the arrow nudges right.
+    Variants set --btn-bg / --btn-fg / --btn-fill / --btn-fill-fg / --btn-ring.
+  */
+  .btn {
+    --btn-bg: var(--color-slate);
+    --btn-fg: var(--color-paper);
+    --btn-fill: var(--color-clay-deep);
+    --btn-fill-fg: #ffffff;
+    --btn-ring: transparent;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    border-radius: var(--radius-field);
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    box-shadow: inset 0 0 0 1.5px var(--btn-ring);
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    transition:
+      color 280ms var(--ease-out),
+      box-shadow 280ms var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--btn-fill);
+    transform: translateX(-101%);
+    transition: transform 420ms var(--ease-out);
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .btn .btn-arrow {
+    transition: transform 300ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover {
+      color: var(--btn-fill-fg);
+      box-shadow: inset 0 0 0 1.5px transparent;
+    }
+    .btn:hover::before {
+      transform: translateX(0);
+    }
+    .btn:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+    /* A button inside a hovered card sweeps too. */
+    .group:hover .btn-group {
+      color: var(--btn-fill-fg);
+      box-shadow: inset 0 0 0 1.5px transparent;
+    }
+    .group:hover .btn-group::before {
+      transform: translateX(0);
+    }
+  }
+
+  .link-line {
+    position: relative;
+    padding-block: 2px;
+  }
+  .link-line::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 300ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .link-line:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+  .link-line[aria-current="page"]::after,
+  .link-line[data-active="true"]::after {
+    transform: scaleX(1);
+  }
+
+  /* Permanent clay underline that thickens on hover. */
+  .link-under {
+    text-decoration: underline;
+    text-decoration-color: var(--color-clay);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    transition:
+      text-decoration-thickness 200ms ease,
+      text-underline-offset 200ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .link-under:hover {
+      text-decoration-thickness: 4px;
+      text-underline-offset: 3px;
+    }
+  }
+
+  .press {
+    transition: transform 160ms var(--ease-out);
+  }
+  .press:active {
+    transform: scale(0.96);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The clay underline under one word. */
+  .swash {
+    background-image: linear-gradient(var(--color-clay), var(--color-clay));
+    background-repeat: no-repeat;
+    background-size: 100% 0.12em;
+    background-position: 0 100%;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  40% {
+    transform: scale(1.3);
+  }
+}
+@keyframes bump {
+  35% {
+    transform: scale(1.35);
+  }
+}
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes draw {
+  from {
+    stroke-dashoffset: var(--len, 60);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes shake {
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ping-soft {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+@keyframes burst {
+  from {
+    transform: translate(-50%, -50%) rotate(var(--a)) translateY(0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(var(--a)) translateY(-18px) scale(0.3);
+    opacity: 0;
+  }
+}
+@keyframes swash-in {
+  from {
+    background-size: 0% 0.12em;
+  }
+}
+@keyframes rise {
+  from {
+    clip-path: inset(100% 0 0 0 round var(--radius-card));
+    transform: translateY(20px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round var(--radius-card));
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .anim-fade-up {
+    animation: fade-up 650ms var(--ease-out) both;
+    animation-delay: var(--delay, 0ms);
+  }
+  .anim-fade-in {
+    animation: fade-in 450ms ease both;
+    animation-delay: var(--delay, 0ms);
+  }
+  .anim-pop {
+    animation: pop 420ms var(--ease-spring);
+  }
+  .anim-bump {
+    animation: bump 450ms var(--ease-spring);
+  }
+  .anim-shake {
+    animation: shake 360ms ease;
+  }
+  .anim-draw {
+    stroke-dasharray: var(--len, 60);
+    animation: draw 600ms var(--ease-out) 200ms both;
+  }
+  .anim-swash {
+    animation: swash-in 900ms var(--ease-out) 400ms both;
+  }
+  .spin-slow {
+    animation: spin-slow 18s linear infinite;
+  }
+  .marquee-track {
+    animation: marquee var(--marquee-duration, 40s) linear infinite;
+  }
+  .ping-soft {
+    animation: ping-soft 1.8s var(--ease-out) infinite;
+  }
+  .burst-dot {
+    animation: burst 600ms var(--ease-out) both;
+  }
+
+  [data-reveal="armed"] {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  [data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 700ms var(--ease-out),
+      transform 900ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-reveal-frame="armed"] {
+    clip-path: inset(100% 0 0 0 round var(--radius-card));
+    transform: translateY(20px);
+  }
+  [data-reveal-frame="in"] {
+    animation: rise 1000ms var(--ease-out) both;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+
+  .hero-progress {
+    animation: progress var(--duration) linear forwards;
+  }
+  .hero-progress[data-paused="true"] {
+    animation-play-state: paused;
+  }
+
+  .page-enter {
+    animation: fade-in 400ms ease both;
+  }
+}
+
+.hero-progress {
+  transform-origin: left;
+}
+
+/* Lenis smooth scroll. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
