@@ -147,13 +147,6 @@ export const testimonials = [
   { name: 'Kavya Hegde', city: 'Mysuru', rating: 5, productId: 'a02', text: 'Wore the rib polo set on a 9 hour train ride and looked fine when I got off. Love it.' },
 ]
 
-export const instagram = {
-  handle: '@aaradhyatrends',
-  tag: '#MyAaradhya',
-  href: 'https://instagram.com',
-  images: ['a29-1', 'a17-1', 'a28-1', 'a41-1', 'a26-1', 'a05-1'],
-}
-
 export const serviceRow = perks
 
 // Review pool used to fill product pages (demo).

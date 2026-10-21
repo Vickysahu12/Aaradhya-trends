@@ -88,7 +88,6 @@ export function Testimonials() {
           <span className="block text-[14px] font-semibold text-slate tabular-nums">{formatPrice(p.price)}</span>
         </Link>
       </div>
-      <p className="mt-3 text-center text-[12px] text-ink-soft">Sample customer notes for this demo store.</p>
     </section>
   )
 }

@@ -9,7 +9,7 @@ import { HomeToOut } from '../sections/home/HomeToOut'
 import { ShopByPrice } from '../sections/home/ShopByPrice'
 import { TeeTrio } from '../sections/home/TeeTrio'
 import { Testimonials } from '../sections/home/Testimonials'
-import { Instagram } from '../sections/home/Instagram'
+import { Offers } from '../sections/home/Offers'
 
 export function HomePage() {
   useDocumentTitle()
@@ -25,7 +25,7 @@ export function HomePage() {
       <ShopByPrice />
       <TeeTrio />
       <Testimonials />
-      <Instagram />
+      <Offers />
     </>
   )
 }

@@ -60,11 +60,5 @@ export const site = {
         ],
       },
     ],
-    social: [
-      { label: 'Instagram', icon: 'instagram', href: 'https://instagram.com' },
-      { label: 'Facebook', icon: 'facebook', href: 'https://facebook.com' },
-      { label: 'Pinterest', icon: 'pinterest', href: 'https://pinterest.com' },
-      { label: 'YouTube', icon: 'youtube', href: 'https://youtube.com' },
-    ],
   },
 }
